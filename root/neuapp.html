@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>CampusNav – Prototyp</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: #f3f7fb;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 24px 12px;
+    }
+
+    .app {
+      background: #ffffff;
+      width: 100%;
+      max-width: 430px;
+      border-radius: 18px;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      border: 1px solid #dbe4f0;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #1b4bff, #42a4ff);
+      color: #ffffff;
+      padding: 18px 20px 16px;
+    }
+
+    .app-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .app-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .app-subtitle {
+      font-size: 0.78rem;
+      opacity: 0.9;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.16);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 0.78rem;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6dff9c;
+    }
+
+    .app-body {
+      padding: 14px 18px 18px;
+    }
+
+    .section-title {
+      font-weight: 600;
+      font-size: 0.92rem;
+      margin-bottom: 8px;
+      color: #123055;
+    }
+
+    .field-label {
+      font-size: 0.78rem;
+      color: #5a6b82;
+      margin-bottom: 4px;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      border-radius: 12px;
+      border: 1px solid #c8d6ec;
+      padding: 8px 10px;
+      font-size: 0.87rem;
+      outline: none;
+      transition: border 0.16s, box-shadow 0.16s;
+    }
+
+    input[type="text"]:focus {
+      border-color: #306dff;
+      box-shadow: 0 0 0 2px rgba(48, 109, 255, 0.16);
+    }
+
+    button {
+      border-radius: 12px;
+      border: none;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #1b4bff;
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(27, 75, 255, 0.25);
+      white-space: nowrap;
+      transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(27, 75, 255, 0.3);
+      background: #1540dd;
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 12px rgba(27, 75, 255, 0.26);
+    }
+
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #3e4f65;
+    }
+
+    select {
+      border-radius: 999px;
+      border: 1px solid #c8d6ec;
+      padding: 4px 10px;
+      font-size: 0.8rem;
+      background: #f7f9fc;
+      outline: none;
+    }
+
+    .message {
+      font-size: 0.78rem;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      line-height: 1.3;
+    }
+
+    .message-info {
+      background: #edf3ff;
+      color: #234085;
+      border: 1px solid #c4d5ff;
+    }
+
+    .message-error {
+      background: #ffecec;
+      color: #8e1a1a;
+      border: 1px solid #ffc0c0;
+    }
+
+    .message-warning {
+      background: #fff5dd;
+      color: #7b5a13;
+      border: 1px solid #ffe2a3;
+    }
+
+    .card {
+      border-radius: 14px;
+      border: 1px solid #dde6f3;
+      padding: 10px 12px;
+      margin-top: 6px;
+      margin-bottom: 6px;
+      background: #ffffff;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #123055;
+    }
+
+    .chip {
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #ecf4ff;
+      color: #2855b3;
+      border: 1px solid #d1e0ff;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2px;
+      font-size: 0.78rem;
+      color: #455468;
+    }
+
+    .detail-row span:first-child {
+      opacity: 0.8;
+    }
+
+    .status-free {
+      color: #128041;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .status-busy {
+      color: #b22222;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .route-steps {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: #324056;
+      padding-left: 18px;
+    }
+
+    .route-steps li {
+      margin-bottom: 3px;
+    }
+
+    .disturbance {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      padding: 7px 9px;
+      border-radius: 10px;
+      background: #fff5dd;
+      border: 1px solid #ffe2a3;
+      color: #7b5a13;
+    }
+
+    .map-wrapper {
+      margin-top: 10px;
+      border-radius: 12px;
+      background: #f5f8ff;
+      border: 1px solid #d2def7;
+      padding: 8px 10px 10px;
+    }
+
+    .map-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #21355b;
+      margin-bottom: 4px;
+    }
+
+    .map-subtitle {
+      font-size: 0.72rem;
+      color: #5a6b82;
+      margin-bottom: 6px;
+    }
+
+    .map-canvas {
+      width: 100%;
+      border-radius: 10px;
+      background: #e5f1ff;
+      border: 1px solid #c5d9fb;
+      overflow: hidden;
+    }
+
+    .map-canvas svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .map-room {
+      fill: #ffffff;
+      stroke: #c8d4fb;
+      stroke-width: 1;
+    }
+
+    .map-corridor {
+      fill: #f9fbff;
+      stroke: #dde5ff;
+      stroke-width: 1;
+    }
+
+    .map-start {
+      fill: #1b4bff;
+    }
+
+    .map-target {
+      fill: #27ae60;
+    }
+
+    .route-line {
+      fill: none;
+      stroke: #ff7a3c;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .user-dot {
+      fill: #007bff;
+      stroke: #ffffff;
+      stroke-width: 1.5;
+    }
+
+    .footer-text {
+      margin-top: 12px;
+      font-size: 0.72rem;
+      text-align: center;
+      color: #71809a;
+    }
+
+    .footer-text span {
+      font-weight: 600;
+      color: #1b4bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="app-header-top">
+        <div>
+          <div class="app-title">CampusNav – Uni Leipzig</div>
+          <div class="app-subtitle">Indoor-Navigation & Raumstatus in Echtzeit (Prototyp)</div>
+        </div>
+        <div class="badge">JAA Consulting</div>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        Prototyp online – Demo-Version für Präsentation
+      </div>
+    </header>
+
+    <main class="app-body">
+      <!-- Gebäudeauswahl -->
+      <section style="margin-bottom:10px;">
+        <div class="section-title">Gebäude auswählen</div>
+        <div class="options-row">
+          <label class="field-label" style="margin-bottom:0;">
+            Gebäude:
+            <select id="buildingSelect" onchange="onBuildingChange()">
+              <option value="haupt">Hauptgebäude (Neues Augusteum)</option>
+              <option value="hoersaal">Hörsaalzentrum Campus Augustusplatz</option>
+              <option value="seminar">Neues Seminargebäude</option>
+            </select>
+          </label>
+          <span style="font-size:0.72rem;color:#647390;">
+            Räume z. B.: <strong>H 105, H 220, HS A1</strong>
+          </span>
+        </div>
+      </section>
+
+      <!-- Suchbereich -->
+      <section>
+        <div class="section-title">Raum suchen</div>
+        <p class="field-label">
+          Gib einen Raumnamen passend zum Gebäude ein, z. B. <strong>H 105</strong>, <strong>H 220</strong> oder <strong>HS A1</strong> im Hauptgebäude.
+        </p>
+        <div class="input-row">
+          <input
+            type="text"
+            id="roomInput"
+            placeholder="z. B. H 105"
+            autocomplete="off"
+          />
+          <button type="button" onclick="searchRoom()">Route anzeigen</button>
+        </div>
+
+        <div class="options-row">
+          <label class="checkbox-group">
+            <input type="checkbox" id="barrierFree" />
+            <span>Barrierefreie Route bevorzugen</span>
+          </label>
+
+          <label class="field-label" style="margin-bottom:0;">
+            Sprache:
+            <select id="languageSelect">
+              <option value="de">Deutsch</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="infoBox" class="message message-info">
+          Demo-Hinweis: Die Karte ist schematisch. Zeigt damit, wie sich ein Punkt (Nutzer) entlang der Route im Gebäude bewegt und der Weg vorgelesen wird.
+        </div>
+      </section>
+
+      <!-- Ergebnisbereich -->
+      <section id="resultSection" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title" id="roomTitle">Raum H 105</div>
+            <div class="chip" id="buildingLabel">Gebäude: Hauptgebäude (Neues Augusteum)</div>
+          </div>
+
+          <div class="detail-row">
+            <span>Etage</span>
+            <span id="floorLabel">EG</span>
+          </div>
+          <div class="detail-row">
+            <span>Gehzeit</span>
+            <span id="timeLabel">4 Minuten</span>
+          </div>
+          <div class="detail-row">
+            <span>Raumstatus</span>
+            <span id="statusLabel" class="status-free">frei</span>
+          </div>
+          <div class="detail-row">
+            <span>Barrierefreiheit</span>
+            <span id="accessLabel">Aufzug verfügbar</span>
+          </div>
+
+          <ul class="route-steps" id="routeSteps"></ul>
+
+          <div id="disturbanceBox" class="disturbance" style="display:none;"></div>
+
+          <div class="nav-controls">
+            <button type="button" onclick="startNavigationFromUI()">Navigation starten</button>
+            <button type="button" onclick="speakRouteFromUI()">Sprachnavigation</button>
+          </div>
+
+          <!-- Karte -->
+          <div class="map-wrapper">
+            <div class="map-title">Gebäudeübersicht (schematisch)</div>
+            <div class="map-subtitle">
+              Der blaue Punkt stellt dich dar. Er bewegt sich entlang der orangefarbenen Route vom Haupteingang zum Zielraum.
+            </div>
+            <div class="map-canvas">
+              <svg id="routeMap" viewBox="0 0 220 140" role="img" aria-label="Schematische Wegdarstellung im Gebäude">
+                <!-- Inhalt per JS -->
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div id="warningBox" class="message message-warning" style="display:none;"></div>
+      </section>
+
+      <p class="footer-text">
+        Prototyp entwickelt von <span>JAA Consulting</span> für das Modul Projektmanagement (Wirtschaftsrecht), Uni Leipzig.
+      </p>
+    </main>
+  </div>
+
+  <script>
+    const buildings = {
+      haupt: "Hauptgebäude (Neues Augusteum)",
+      hoersaal: "Hörsaalzentrum Campus Augustusplatz",
+      seminar: "Neues Seminargebäude"
+    };
+
+    const rooms = [
+      {
+        id: "H 105",
+        buildingId: "haupt",
+        floor: "EG",
+        timeMinutes: 4,
+        isFree: true,
+        hasElevator: true,
+        routeSteps: [
+          "Ebene EG: Starte am Haupteingang des Hauptgebäudes (Augusteum).",
+          "Gehe GERADEAUS durch das Foyer bis zur großen Treppe.",
+          "Bleibe im EG und biege LINKS in den Hauptflur Block A ab.",
+          "Gehe GERADEAUS an den Räumen H 101 und H 103 vorbei.",
+          "Der Raum H 105 befindet sich LINKS neben dir – Ziel erreicht."
+        ],
+        disturbance: "Treppenhaus B ist aktuell teilweise gesperrt. Die Route wurde so berechnet, dass sie komplett über Block A führt."
+      },
+      {
+        id: "H 220",
+        buildingId: "haupt",
+        floor: "2. OG",
+        timeMinutes: 6,
+        isFree: false,
+        hasElevator: true,
+        routeSteps: [
+          "Ebene EG: Starte am Haupteingang des Hauptgebäudes (Augusteum).",
+          "Gehe GERADEAUS bis zur großen Treppe und dem Aufzug.",
+          "Nimm den AUFZUG in das 2. Obergeschoss (2. OG).",
+          "Steige aus und biege RECHTS in den langen Flur.",
+          "Gehe GERADEAUS an den Räumen H 212 bis H 218 vorbei.",
+          "Der Raum H 220 liegt RECHTS am Ende des Flurs – Ziel erreicht."
+        ],
+        disturbance: null
+      },
+      {
+        id: "HS A1",
+        buildingId: "haupt",
+        floor: "EG",
+        timeMinutes: 5,
+        isFree: false,
+        hasElevator: true,
+        routeSteps: [
+          "Ebene EG: Starte am Haupteingang des Hauptgebäudes (Augusteum).",
+          "Gehe GERADEAUS durch das Foyer und halte dich leicht LINKS zur Hörsaalzone A.",
+          "Folge der Beschilderung »Hörsaal A1«.",
+          "Gehe durch die Glastüren GERADEAUS, dann RECHTS den kurzen Gang hinunter.",
+          "Der Hörsaal HS A1 liegt GERADEAUS vor dir – Ziel erreicht."
+        ],
+        disturbance: "Aufgrund einer Veranstaltung ist der Bereich vor HS A1 zeitweise stark frequentiert. Plane ggf. 1–2 Minuten Puffer ein."
+      },
+      {
+        id: "S 102",
+        buildingId: "seminar",
+        floor: "1. OG",
+        timeMinutes: 3,
+        isFree: true,
+        hasElevator: true,
+        routeSteps: [
+          "Starte im Foyer des Neuen Seminargebäudes.",
+          "Gehe GERADEAUS bis zum Aufzug im linken Flur.",
+          "Fahre in das 1. Obergeschoss (1. OG).",
+          "Biege RECHTS ab und folge der Beschilderung »S 102«.",
+          "Der Raum S 102 befindet sich LINKS im Flur."
+        ],
+        disturbance: null
+      },
+      {
+        id: "HSZ 1",
+        buildingId: "hoersaal",
+        floor: "EG",
+        timeMinutes: 4,
+        isFree: true,
+        hasElevator: true,
+        routeSteps: [
+          "Starte am Haupteingang des Hörsaalzentrums am Campus Augustusplatz.",
+          "Gehe GERADEAUS bis zur großen Infotafel.",
+          "Biege LINKS in den Hörsaalbereich 1 ab.",
+          "Folge der Beschilderung »HSZ 1« GERADEAUS.",
+          "Der Hörsaal HSZ 1 liegt auf der RECHTEN Seite – Ziel erreicht."
+        ],
+        disturbance: null
+      }
+    ];
+
+    // einfache Grundkarte (eine Etage mit Flur)
+    function getBaseMap() {
+      return `
+        <rect x="10" y="20" width="200" height="100" rx="12" ry="12" class="map-room" />
+        <rect x="25" y="60" width="170" height="20" class="map-corridor" />
+        <!-- Startpunkt: Eingang links unten -->
+        <circle cx="25" cy="110" r="4" class="map-start" />
+      `;
+    }
+
+    // Animationspunkte (damit der Punkt sich bewegt) – grob Google-Maps-like
+    const routeAnimationPoints = {
+      "haupt|H 105": [
+        { x: 25, y: 110 },
+        { x: 50, y: 110 },
+        { x: 50, y: 70 },
+        { x: 90, y: 70 },
+        { x: 120, y: 70 }
+      ],
+      "haupt|H 220": [
+        { x: 25, y: 110 },
+        { x: 50, y: 110 },
+        { x: 50, y: 60 },
+        { x: 90, y: 40 },
+        { x: 170, y: 40 }
+      ],
+      "haupt|HS A1": [
+        { x: 25, y: 110 },
+        { x: 70, y: 110 },
+        { x: 130, y: 90 }
+      ],
+      "seminar|S 102": [
+        { x: 25, y: 110 },
+        { x: 25, y: 80 },
+        { x: 80, y: 80 },
+        { x: 180, y: 80 }
+      ],
+      "hoersaal|HSZ 1": [
+        { x: 25, y: 110 },
+        { x: 70, y: 110 },
+        { x: 140, y: 110 }
+      ]
+    };
+
+    // statische Linien (Route wie Straße)
+    const routeStaticPath = {
+      "haupt|H 105": "M25 110 L 50 110 L 50 70 L 90 70 L 120 70",
+      "haupt|H 220": "M25 110 L 50 110 L 50 60 L 90 40 L 170 40",
+      "haupt|HS A1": "M25 110 L 70 110 L 130 90",
+      "seminar|S 102": "M25 110 L 25 80 L 80 80 L 180 80",
+      "hoersaal|HSZ 1": "M25 110 L 70 110 L 140 110"
+    };
+
+    function currentBuildingId() {
+      return document.getElementById("buildingSelect").value;
+    }
+
+    function findRoomById(input, buildingId) {
+      const normalized = input.trim().toUpperCase().replace(/\s+/g, " ");
+      return rooms.find(
+        room => room.id.toUpperCase() === normalized && room.buildingId === buildingId
+      );
+    }
+
+    let lastRoom = null;
+    let navInterval = null;
+
+    function searchRoom() {
+      const buildingId = currentBuildingId();
+      const input = document.getElementById("roomInput").value;
+      const barrierFree = document.getElementById("barrierFree").checked;
+      const infoBox = document.getElementById("infoBox");
+      const resultSection = document.getElementById("resultSection");
+      const warningBox = document.getElementById("warningBox");
+      const disturbanceBox = document.getElementById("disturbanceBox");
+
+      warningBox.style.display = "none";
+      disturbanceBox.style.display = "none";
+
+      if (!input.trim()) {
+        infoBox.textContent = "Bitte gib einen Raumnamen ein, z. B. »H 105« oder »H 220« im Hauptgebäude.";
+        infoBox.className = "message message-error";
+        resultSection.style.display = "none";
+        return;
+      }
+
+      const room = findRoomById(input, buildingId);
+      if (!room) {
+        infoBox.textContent =
+          "Der Raum wurde im aktuell ausgewählten Gebäude nicht gefunden (Demo-Datensatz). Probiere z. B. H 105, H 220 oder HS A1 im Hauptgebäude.";
+        infoBox.className = "message message-error";
+        resultSection.style.display = "none";
+        return;
+      }
+
+      infoBox.textContent =
+        "Die Route wurde berechnet. Nutzt die animierte Karte oder die Sprachnavigation, um den Weg zu demonstrieren.";
+      infoBox.className = "message message-info";
+
+      document.getElementById("roomTitle").textContent = "Raum " + room.id;
+      document.getElementById("buildingLabel").textContent = "Gebäude: " + buildings[room.buildingId];
+      document.getElementById("floorLabel").textContent = room.floor;
+      document.getElementById("timeLabel").textContent = room.timeMinutes + " Minuten";
+
+      const statusLabel = document.getElementById("statusLabel");
+      if (room.isFree) {
+        statusLabel.textContent = "frei";
+        statusLabel.className = "status-free";
+      } else {
+        statusLabel.textContent = "belegt";
+        statusLabel.className = "status-busy";
+      }
+
+      document.getElementById("accessLabel").textContent = room.hasElevator
+        ? "Aufzug verfügbar"
+        : "nicht vollständig barrierefrei (kein Aufzug)";
+
+      const routeList = document.getElementById("routeSteps");
+      routeList.innerHTML = "";
+      room.routeSteps.forEach(step => {
+        const li = document.createElement("li");
+        li.textContent = step;
+        routeList.appendChild(li);
+      });
+
+      if (room.disturbance) {
+        disturbanceBox.style.display = "block";
+        disturbanceBox.textContent = "Hinweis: " + room.disturbance;
+      } else {
+        disturbanceBox.style.display = "none";
+      }
+
+      if (barrierFree && !room.hasElevator) {
+        warningBox.style.display = "block";
+        warningBox.textContent =
+          "Für diesen Raum steht aktuell keine vollständig barrierefreie Route zur Verfügung. Die vorgeschlagene Route enthält mindestens eine Treppe.";
+      } else {
+        warningBox.style.display = "none";
+      }
+
+      renderRouteMap(room);
+      lastRoom = room;
+      resultSection.style.display = "block";
+    }
+
+    function renderRouteMap(room) {
+      const svg = document.getElementById("routeMap");
+      if (!svg) return;
+
+      const key = room.buildingId + "|" + room.id;
+      const base = getBaseMap();
+      const path = routeStaticPath[key];
+      const animPoints = routeAnimationPoints[key];
+
+      if (!path || !animPoints) {
+        svg.innerHTML = base;
+        return;
+      }
+
+      const target = animPoints[animPoints.length - 1];
+
+      svg.innerHTML = `
+        ${base}
+        <!-- Zielpunkt -->
+        <circle cx="${target.x}" cy="${target.y}" r="4" class="map-target" />
+        <!-- Route -->
+        <path d="${path}" class="route-line" />
+        <!-- Nutzer-Punkt (wird animiert) -->
+        <circle id="userDot" cx="${animPoints[0].x}" cy="${animPoints[0].y}" r="5" class="user-dot" />
+      `;
+    }
+
+    function startNavigationFromUI() {
+      if (!lastRoom) return;
+      startNavigation(lastRoom);
+    }
+
+    function startNavigation(room) {
+      const svg = document.getElementById("routeMap");
+      if (!svg) return;
+
+      const key = room.buildingId + "|" + room.id;
+      const points = routeAnimationPoints[key];
+      if (!points) return;
+
+      if (navInterval) {
+        clearInterval(navInterval);
+        navInterval = null;
+      }
+
+      const dot = document.getElementById("userDot");
+      if (!dot) return;
+
+      let index = 0;
+      dot.setAttribute("cx", points[0].x);
+      dot.setAttribute("cy", points[0].y);
+
+      navInterval = setInterval(() => {
+        index++;
+        if (index >= points.length) {
+          clearInterval(navInterval);
+          navInterval = null;
+          return;
+        }
+        const p = points[index];
+        dot.setAttribute("cx", p.x);
+        dot.setAttribute("cy", p.y);
+      }, 600); // 0,6s pro Schritt
+    }
+
+    function speakRouteFromUI() {
+      if (!lastRoom) return;
+      speakRoute(lastRoom);
+    }
+
+    function speakRoute(room) {
+      if (!("speechSynthesis" in window)) {
+        alert("Sprachausgabe wird von diesem Browser nicht unterstützt.");
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const langSel = document.getElementById("languageSelect").value;
+      const isGerman = langSel === "de";
+
+      const textDe = room.routeSteps.join(" ");
+      const textEn = room.routeSteps
+        .map(step =>
+          step
+            .replace("Ebene", "Level")
+            .replace("Starte", "Start")
+            .replace("Gehe", "Walk")
+            .replace("GERADEAUS", "STRAIGHT")
+            .replace("LINKS", "LEFT")
+            .replace("RECHTS", "RIGHT")
+            .replace("Ziel erreicht", "You have reached your destination")
+        )
+        .join(" ");
+
+      const utterance = new SpeechSynthesisUtterance(isGerman ? textDe : textEn);
+      utterance.lang = isGerman ? "de-DE" : "en-US";
+      utterance.rate = 1;
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function onBuildingChange() {
+      const buildingId = currentBuildingId();
+      const placeholderInput = document.getElementById("roomInput");
+      const resultSection = document.getElementById("resultSection");
+      const infoBox = document.getElementById("infoBox");
+
+      resultSection.style.display = "none";
+      lastRoom = null;
+      if (navInterval) {
+        clearInterval(navInterval);
+        navInterval = null;
+      }
+
+      if (buildingId === "haupt") {
+        placeholderInput.placeholder = "z. B. H 105, H 220, HS A1";
+        infoBox.textContent = "Hauptgebäude ausgewählt. Nutzt z. B. H 105, H 220 oder HS A1, um die Indoor-Navigation zu demonstrieren.";
+      } else if (buildingId === "seminar") {
+        placeholderInput.placeholder = "z. B. S 102";
+        infoBox.textContent = "Neues Seminargebäude ausgewählt. Nutzt z. B. S 102 als Demo-Raum.";
+      } else {
+        placeholderInput.placeholder = "z. B. HSZ 1";
+        infoBox.textContent = "Hörsaalzentrum ausgewählt. Nutzt z. B. HSZ 1 als Demo-Raum.";
+      }
+
+      const svg = document.getElementById("routeMap");
+      if (svg) {
+        svg.innerHTML = getBaseMap();
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const svg = document.getElementById("routeMap");
+      if (svg) {
+        svg.innerHTML = getBaseMap();
+      }
+    });
+  </script>
+</body>
+</html>
